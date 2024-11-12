@@ -118,8 +118,6 @@ GLFW_LINUX_ENABLE_X11      ?= TRUE
 # WARNING: Library is not included in raylib, it MUST be configured by users
 SDL_INCLUDE_PATH      ?= $(RAYLIB_SRC_PATH)/external/SDL2/include
 SDL_LIBRARY_PATH      ?= $(RAYLIB_SRC_PATH)/external/SDL2/lib
-SDL_LIBRARIES         ?= -lSDL2 -lSDL2main
-
 
 # Determine if the file has root access (only required to install raylib)
 # "whoami" prints the name of the user that calls him (so, if it is the root user, "whoami" prints "root")
@@ -462,7 +460,7 @@ CFLAGS += $(CUSTOM_CFLAGS)
 # Define include paths for required headers: INCLUDE_PATHS
 # NOTE: Several external required libraries (stb and others)
 #------------------------------------------------------------------------------------------------
-INCLUDE_PATHS = -I. $(EXTRA_INCLUDE_PATHS)
+INCLUDE_PATHS = -I. 
 
 # Define additional directories containing required header files
 ifeq ($(TARGET_PLATFORM),PLATFORM_DESKTOP_GLFW)
@@ -588,7 +586,7 @@ ifeq ($(TARGET_PLATFORM),PLATFORM_DESKTOP_SDL)
             LDLIBS += -lX11
         endif
     endif
-    LDLIBS += $(SDL_LIBRARIES)
+    LDLIBS += -lSDL2 -lSDL2main
 endif
 ifeq ($(TARGET_PLATFORM),PLATFORM_DESKTOP_RGFW)
     ifeq ($(PLATFORM_OS),WINDOWS)

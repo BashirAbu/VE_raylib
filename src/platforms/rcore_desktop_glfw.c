@@ -58,7 +58,6 @@
 #if defined(_WIN32)
     typedef void *PVOID;
     typedef PVOID HANDLE;
-    #include "../external/win32_clipboard.h"
     typedef HANDLE HWND;
     #define GLFW_EXPOSE_NATIVE_WIN32
     #define GLFW_NATIVE_INCLUDE_NONE // To avoid some symbols re-definition in windows.h
@@ -66,9 +65,8 @@
 
     #if defined(SUPPORT_WINMM_HIGHRES_TIMER) && !defined(SUPPORT_BUSY_WAIT_LOOP)
         // NOTE: Those functions require linking with winmm library
-        #pragma warning(disable: 4273)
+        unsigned int __stdcall timeBeginPeriod(unsigned int uPeriod);
         unsigned int __stdcall timeEndPeriod(unsigned int uPeriod);
-        #pragma warning(default: 4273) 
     #endif
 #endif
 #if defined(__linux__) || defined(__FreeBSD__) || defined(__OpenBSD__)
@@ -699,7 +697,10 @@ void SetWindowFocused(void)
 {
     glfwFocusWindow(platform.handle);
 }
-
+void* GetGLFWWindow(void)
+{
+    return (void*)platform.handle;
+}
 // Get native window handle
 void *GetWindowHandle(void)
 {
@@ -966,33 +967,6 @@ const char *GetClipboardText(void)
 {
     return glfwGetClipboardString(platform.handle);
 }
-
-#if defined(SUPPORT_CLIPBOARD_IMAGE)
-// Get clipboard image
-Image GetClipboardImage(void)
-{
-    Image image = {0};
-    unsigned long long int dataSize = 0;
-    void* fileData = NULL;
-
-#ifdef _WIN32
-    int width, height;
-    fileData  = (void*)Win32GetClipboardImageData(&width, &height, &dataSize);
-#else
-    TRACELOG(LOG_WARNING, "Clipboard image: PLATFORM_DESKTOP_GLFW doesn't implement `GetClipboardImage` for this OS");
-#endif
-
-    if (fileData == NULL)
-    {
-        TRACELOG(LOG_WARNING, "Clipboard image: Couldn't get clipboard data.");
-    }
-    else
-    {
-        image = LoadImageFromMemory(".bmp", fileData, (int)dataSize);
-    }
-    return image;
-}
-#endif // SUPPORT_CLIPBOARD_IMAGE
 
 // Show mouse cursor
 void ShowCursor(void)
@@ -1926,8 +1900,4 @@ static void JoystickCallback(int jid, int event)
     }
 }
 
-#ifdef _WIN32
-#   define WIN32_CLIPBOARD_IMPLEMENTATION
-#   include "../external/win32_clipboard.h"
-#endif
 // EOF
