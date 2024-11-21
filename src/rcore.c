@@ -509,7 +509,7 @@ const char *TextFormat(const char *text, ...);              // Formatting of tex
 #endif // !SUPPORT_MODULE_RTEXT
 
 #if defined(PLATFORM_DESKTOP)
-    #define PLATFORM_DESKTOP_GLFW
+#define PLATFORM_DESKTOP_GLFW
 #endif
 
 // Include platform-specific submodules

@@ -575,7 +575,7 @@ Image LoadImageFromTexture(Texture2D texture)
             // original texture format is retrieved on RPI...
             image.format = PIXELFORMAT_UNCOMPRESSED_R8G8B8A8;
 #endif
-            TRACELOG(LOG_INFO, "TEXTURE: [ID %i] Pixel data retrieved successfully", texture.id);
+            //TRACELOG(LOG_INFO, "TEXTURE: [ID %i] Pixel data retrieved successfully", texture.id);
         }
         else TRACELOG(LOG_WARNING, "TEXTURE: [ID %i] Failed to retrieve pixel data", texture.id);
     }
