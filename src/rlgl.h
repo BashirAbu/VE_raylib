@@ -2240,7 +2240,6 @@ void rlglInit(int width, int height)
 #if defined(RLGL_ENABLE_OPENGL_DEBUG_CONTEXT) && defined(GRAPHICS_API_OPENGL_43)
     if ((glDebugMessageCallback != NULL) && (glDebugMessageControl != NULL))
     {
-        glDebugMessageCallback(rlDebugMessageCallback, 0);
         // glDebugMessageControl(GL_DEBUG_SOURCE_API, GL_DEBUG_TYPE_ERROR, GL_DEBUG_SEVERITY_HIGH, 0, 0, GL_TRUE);
 
         // Debug context options:
@@ -2248,6 +2247,8 @@ void rlglInit(int width, int height)
         //  - GL_DEBUG_OUTPUT_SYNCHRONUS - Callback is in sync with errors, so a breakpoint can be placed on the callback in order to get a stacktrace for the GL error
         glEnable(GL_DEBUG_OUTPUT);
         glEnable(GL_DEBUG_OUTPUT_SYNCHRONOUS);
+        glDebugMessageCallback(rlDebugMessageCallback, 0);
+        glDebugMessageControl(GL_DONT_CARE, GL_DONT_CARE, GL_DONT_CARE, 0, NULL, GL_TRUE);
     }
 #endif
 
@@ -3171,6 +3172,8 @@ bool rlCheckRenderBatchLimit(int vCount)
     return overflow;
 }
 
+
+
 // Textures data management
 //-----------------------------------------------------------------------------------------
 // Convert image data to OpenGL texture (returns OpenGL valid Id)
@@ -3224,7 +3227,7 @@ unsigned int rlLoadTexture(const void *data, int width, int height, int format, 
     glPixelStorei(GL_UNPACK_ALIGNMENT, 1);
 
     glGenTextures(1, &id);              // Generate texture id
-
+    GLenum error = glGetError();
     glBindTexture(GL_TEXTURE_2D, id);
 
     int mipWidth = width;

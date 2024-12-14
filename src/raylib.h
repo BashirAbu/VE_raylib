@@ -1550,6 +1550,7 @@ RLAPI void DrawGrid(int slices, float spacing);                                 
 //------------------------------------------------------------------------------------
 
 // Model management functions
+RLAPI Model LoadModelFromMemory(unsigned char* fileData, int dataSize, const char* fileName);     // Load model from memory.
 RLAPI Model LoadModel(const char *fileName);                                                // Load model from files (meshes and materials)
 RLAPI Model LoadModelFromMesh(Mesh mesh);                                                   // Load model from generated mesh (default material)
 RLAPI bool IsModelValid(Model model);                                                       // Check if a model is valid (loaded in GPU, VAO/VBOs)
